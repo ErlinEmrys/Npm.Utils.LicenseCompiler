@@ -17,7 +17,7 @@ program
 
 program.command( "Compile", { isDefault: true } )
 	.description( "Gather all third parties licenses, compiles it together and write it as MD or JSON file." )
-	.option( "-s, --Source <SF>", "Specify a path to package.json source file", "./package.json" )
+	.option( "-s, --Source <SF>", "Specify a path to package.json source file" )
 	.option( "-m, --Md-file <MDFile>", "Specify a path to output MD file" )
 	.option( "-j, --Json-file <JsonFile>", "Specify a path to output JSON file" )
 	.action( async( options: ICompileOptions ) =>
