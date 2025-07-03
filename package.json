@@ -1,0 +1,56 @@
+{
+	"name": "license-compiler",
+	"type": "module",
+	"version": "0.0.1",
+	"description": "Utility for managing licenses",
+	"author": "Erlin Emrys",
+	"license": "MIT",
+	"homepage": "https://github.com/ErlinEmrys/Npm.Utils.LicenseCompiler#README",
+	"repository":
+	{
+		"type": "git",
+		"url": "git+https://github.com/ErlinEmrys/Npm.Utils.LicenseCompiler.git"
+	},
+	"bugs":
+	{
+		"url": "https://github.com/ErlinEmrys/Npm.Utils.LicenseCompiler/issues"
+	},
+	"keywords":
+	[
+		"license",
+		"licence",
+		"third",
+		"party",
+		"generate",
+		"file"
+	],
+	"main": "dist/Cli.js",
+	"types": "dist/Cli.d.ts",
+	"bin":
+	{
+		"license-compiler": "./dist/Cli.js"
+	},
+	"files": [ "dist" ],
+	"scripts":
+	{
+		"dev": "tsx src/Cli.ts",
+		"build": "tsup",
+		"lint": "eslint .",
+		"format": "eslint . --fix"
+	},
+	"dependencies":
+	{
+		"@commander-js/extra-typings": "14.0.0",
+		"@erlinemrys/lib.common": "0.0.3",
+		"commander": "14.0.0"
+	},
+	"devDependencies":
+	{
+		"@erlinemrys/eslint-config": "0.0.4",
+		"@types/node": "22.15.29",
+		"eslint": "9.29.0",
+		"tsup": "8.5.0",
+		"tsx": "4.20.3",
+		"typescript": "5.8.3"
+	}
+}
