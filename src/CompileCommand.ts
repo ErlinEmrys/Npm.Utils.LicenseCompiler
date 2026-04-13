@@ -1,8 +1,11 @@
+import type { ILicenseData } from "./License";
 import { execFile } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { ValidationHelper } from "@erlinemrys/lib.common";
 import { FormatJson } from "./JsonWritter";
+import { LicenseData, LicenseDataType, LicensePackage } from "./License";
 import { WriteOutputMD } from "./MarkdownWritter";
 
 export interface ICompileOptions
@@ -56,14 +59,22 @@ async function CompileLicences( options: ICompileOptions )
 				data = JSON.parse( stdout );
 			}
 
+			const packages = TransformPackages( data );
+
 			if( options.JsonFile )
 			{
-				FormatJson( options.JsonFile, data );
+				FormatJson( options.JsonFile, packages );
 			}
 
 			if( options.MdFile )
 			{
-				WriteOutputMD( options.MdFile, data );
+				WriteOutputMD( options.MdFile, packages );
+			}
+
+			if( packages.Packages.some( fPackage => fPackage.LicenseDataType === LicenseDataType.Error || fPackage.LicenseDataType === LicenseDataType.EnumNullError ) )
+			{
+				Log.Err( "Some of licenses are in error state." );
+				process.exitCode = 1;
 			}
 		}
 	} );
@@ -71,18 +82,28 @@ async function CompileLicences( options: ICompileOptions )
 
 export function GetLicenceFile( packagePath: string )
 {
-	const licenseFileNames = [ "LICENSE", "LICENCE", "COPYING" ];
+	const fileNames = [ "LICENSE", "LICENCE", "COPYING" ];
+	return GetFileContent( packagePath, fileNames );
+}
+
+export function GetNoticeFile( packagePath: string )
+{
+	const fileNames = [ "NOTICE" ];
+	return GetFileContent( packagePath, fileNames );
+}
+
+function GetFileContent( packagePath: string, fileNames: string[] )
+{
 	let licenseFileContent;
 
-	for( const i in licenseFileNames )
+	for( const i in fileNames )
 	{
-		const regex = new RegExp( `${ licenseFileNames[ i ] }.*?`, "i" );
+		const regex = new RegExp( `${ fileNames[ i ] }.*?`, "i" );
 		fs.readdirSync( packagePath ).some( ( file ) =>
 		{
 			const match = file.match( regex );
 			if( match )
 			{
-				// Log.Dbg( "L: ", path.join( packagePath, file ) );
 				licenseFileContent = fs.readFileSync( path.join( packagePath, file ) ).toString();
 			}
 
@@ -95,12 +116,54 @@ export function GetLicenceFile( packagePath: string )
 		}
 	}
 
-	/*
-	 if( !licenseFileContent )
-	 {
-	 	Log.Err( `FILE NOT FOUND: ${ packagePath }` );
-	 }
-	 */
-
 	return licenseFileContent;
+}
+
+function TransformPackages( data: any ): ILicenseData
+{
+	const result = new LicenseData();
+
+	Object.keys( data ).forEach( ( licenseType ) =>
+	{
+		const array = data[ licenseType ];
+		for( const fPackIndex in array )
+		{
+			const fPackage = array[ fPackIndex ];
+
+			const name = fPackage.name.slice( fPackage.name.startsWith( "@" ) ? 1 : 0 );
+			const authors = fPackage.author;
+			const homepage = fPackage.homepage;
+
+			for( const i in fPackage.versions )
+			{
+				const origLicense = fPackage.license;
+				let license = GetLicenceFile( fPackage.paths[ i ] );
+				const noticeFile = GetNoticeFile( fPackage.paths[ i ] );
+
+				let licenseType = LicenseDataType.Text;
+
+				if( !license )
+				{
+					license = origLicense;
+					licenseType = LicenseDataType.Expression;
+
+					if( ValidationHelper.IsUrl( origLicense ) )
+					{
+						licenseType = LicenseDataType.Url;
+					}
+				}
+
+				const licensePackage = new LicensePackage( licenseType, name, fPackage.versions[ i ], authors, undefined, homepage, license, noticeFile, undefined );
+				result.Packages.push( licensePackage );
+			}
+		}
+	} );
+
+	// Sort by Name
+	result.Packages.sort( ( left, right ) =>
+	{
+		return left.Name < right.Name ? -1 : left.Name > right.Name ? 1 : 0;
+	} );
+
+	return result;
 }

@@ -5,7 +5,7 @@ import { Command } from "commander";
 import { version } from "./../package.json";
 import { CompileCommand } from "./CompileCommand";
 
-Log.Subscribe( new ConsoleLogger() );
+Log.SubscribeLog( new ConsoleLogger() );
 Log.Dbg( "Program START" );
 
 const program = new Command();
@@ -25,7 +25,7 @@ program.command( "Compile", { isDefault: true } )
 		await CompileCommand( options );
 	} );
 
-export async function Main( args: string[] ): Promise<void>
+export async function Main( args: string[] ): Promise< void >
 {
 	await program.parseAsync( args );
 }

@@ -1,69 +1,63 @@
+import type { ILicenseData } from "./License";
 import fs from "node:fs";
-import { GetLicenceFile } from "./CompileCommand";
+import { ValidationHelper } from "@erlinemrys/lib.common";
+import { LicenseDataType } from "./License";
 
 const MD_HEADER_FIRST_SEPARATOR = "=";
 const MD_HEADER_SECOND_SEPARATOR = "-";
 const MD_LINE_ENDING = "\n";
+const MD_SPDX_URL = "https://spdx.org/licenses/";
 
-export function WriteOutputMD( outputFilePath: string, data: any )
+export function WriteOutputMD( outputFilePath: string, data: ILicenseData )
 {
 	let result = "";
 	result = WriteHeaderMD( result, "Third party licenses", MD_HEADER_FIRST_SEPARATOR );
 	result = WriteParagraphMD( result, "*This software stands on the shoulders of the following giants:*" );
 	result = WriteLineMD( result );
 
-	Object.keys( data ).forEach( ( licenseType ) =>
+	data.Packages.forEach( ( fPackage ) =>
 	{
-		const array = data[ licenseType ];
-		for( const fPackIndex in array )
+		result = WriteHeaderMD( result, `${ fPackage.Name } [${ fPackage.Version }]`, MD_HEADER_SECOND_SEPARATOR, 1 );
+
+		if( fPackage.Homepage )
 		{
-			const fPackage = array[ fPackIndex ];
-			for( const i in fPackage.versions )
+			result = WriteParagraphMD( result, `Homepage: <${ fPackage.Homepage }>`, 1 );
+		}
+
+		if( fPackage.Authors )
+		{
+			result = WriteParagraphMD( result, `Authors: ${ fPackage.Authors }`, 1 );
+		}
+
+		result = WriteLineMD( result, "License:", 1 );
+
+		if( fPackage.LicenseDataType === LicenseDataType.Text )
+		{
+			result = WriteComplexMD( result, fPackage.License, 2 );
+		}
+		else if( fPackage.LicenseDataType === LicenseDataType.Url )
+		{
+			result = WriteLineMD( result, `<${ fPackage.License }>`, 2 );
+		}
+		else if( fPackage.LicenseDataType === LicenseDataType.Expression )
+		{
+			const url = `${ MD_SPDX_URL }${ fPackage.License }.html`;
+			if( ValidationHelper.IsUrl( url ) )
 			{
-				result = WriteHeaderMD( result, `${ fPackage.name.slice( fPackage.name.startsWith( "@" ) ? 1 : 0 ) } [${ fPackage.versions[ i ] }]`, MD_HEADER_SECOND_SEPARATOR, 1 );
-
-				if( fPackage.homepage )
-				{
-					result = WriteParagraphMD( result, `Homepage: <${ fPackage.homepage }>`, 1 );
-				}
-
-				if( fPackage.author )
-				{
-					result = WriteParagraphMD( result, `Authors: ${ fPackage.author }`, 1 );
-				}
-
-				result = WriteLineMD( result, "License:", 1 );
-
-				const licenseFile = GetLicenceFile( fPackage.paths[ i ] );
-				if( licenseFile )
-				{
-					result = WriteComplexMD( result, licenseFile, 2 );
-				}
-				else
-				{
-					let url = fPackage.license;
-					if( IsUrl( url ) )
-					{
-						result = WriteLineMD( result, `<${ url }>`, 2 );
-					}
-					else
-					{
-						url = `https://spdx.org/licenses/${ url }.html`;
-						if( IsUrl( url ) )
-						{
-							result = WriteLineMD( result, `[${ fPackage.license }](${ url })`, 2 );
-						}
-						else
-						{
-							result = WriteLineMD( result, fPackage.license, 2 );
-						}
-					}
-				}
-
-				result = WriteLineMD( result, undefined, 1 );
-				result = WriteLineMD( result );
+				result = WriteLineMD( result, `[${ fPackage.License }](${ url })`, 2 );
+			}
+			else
+			{
+				result = WriteLineMD( result, fPackage.License, 2 );
 			}
 		}
+		else
+		{
+			result = WriteLineMD( result, "Error in retrieval of license", 2 );
+		}
+
+		result = WriteLineMD( result, undefined, 1 );
+		result = WriteLineMD( result );
 	} );
 
 	fs.writeFileSync( outputFilePath, result, "utf-8" );
@@ -78,10 +72,13 @@ function WriteHeaderMD( result: string, text: string, headerSeparator: string, i
 	return result;
 }
 
-function WriteComplexMD( result: string, text: string, indentation = 0 )
+function WriteComplexMD( result: string, text: string | undefined, indentation = 0 )
 {
-	const lines = text.split( /\r?\n/ );
-	lines.forEach( line => result = WriteLineMD( result, line, indentation ) );
+	if( text )
+	{
+		const lines = text.split( /\r?\n/ );
+		lines.forEach( line => result = WriteLineMD( result, line, indentation ) );
+	}
 
 	return result;
 }
@@ -118,17 +115,4 @@ function WriteIndentationMD( result: string, text: string | undefined, indentati
 	}
 
 	return result;
-}
-
-function IsUrl( string: string )
-{
-	try
-	{
-		const url = new URL( string );
-		return url.protocol === "http:" || url.protocol === "https:";
-	}
-	catch
-	{
-		return false;
-	}
 }
