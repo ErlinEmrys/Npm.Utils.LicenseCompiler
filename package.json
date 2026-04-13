@@ -30,7 +30,7 @@
 	{
 		"license-compiler": "./dist/Cli.js"
 	},
-	"files": [ "dist", "LICENSE_THIRD_PARTIES.md" ],
+	"files": [ "LICENSE_THIRD_PARTIES.md", "dist" ],
 	"scripts":
 	{
 		"dev": "tsx src/Cli.ts -m LICENSE_THIRD_PARTIES.md",
