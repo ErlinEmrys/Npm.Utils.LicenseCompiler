@@ -1,7 +1,7 @@
 {
 	"name": "license-compiler",
 	"type": "module",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "Utility for managing licenses",
 	"author": "Erlin Emrys",
 	"license": "MIT",
@@ -24,6 +24,12 @@
 		"generate",
 		"file"
 	],
+	"exports": {
+		".": {
+			"types": "dist/Cli.d.ts",
+			"import": "dist/Cli.js"
+		}
+	},
 	"main": "dist/Cli.js",
 	"types": "dist/Cli.d.ts",
 	"bin":
