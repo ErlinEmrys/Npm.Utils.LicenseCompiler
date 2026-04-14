@@ -1,7 +1,7 @@
 {
 	"name": "license-compiler",
 	"type": "module",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "Utility for managing licenses",
 	"author": "Erlin Emrys",
 	"license": "MIT",

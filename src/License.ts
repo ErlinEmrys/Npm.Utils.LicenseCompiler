@@ -31,6 +31,7 @@ export interface ILicensePackage
 
 export interface ILicenseData
 {
+	ProjectLicense?: string;
 	Packages: ILicensePackage[];
 }
 
@@ -62,5 +63,6 @@ export class LicensePackage implements ILicensePackage
 
 export class LicenseData implements ILicenseData
 {
+	ProjectLicense?: string;
 	Packages: ILicensePackage[] = [];
 }

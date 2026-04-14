@@ -122,6 +122,7 @@ function GetFileContent( packagePath: string, fileNames: string[] )
 function TransformPackages( data: any ): ILicenseData
 {
 	const result = new LicenseData();
+	result.ProjectLicense = GetLicenceFile( process.cwd() );
 
 	Object.keys( data ).forEach( ( licenseType ) =>
 	{
