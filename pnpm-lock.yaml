@@ -12,8 +12,8 @@ importers:
         specifier: 14.0.0
         version: 14.0.0(commander@14.0.3)
       '@erlinemrys/lib.common':
-        specifier: 0.0.13
-        version: 0.0.13
+        specifier: 0.0.14
+        version: 0.0.14
       commander:
         specifier: 14.0.3
         version: 14.0.3
@@ -124,8 +124,8 @@ packages:
     peerDependencies:
       eslint: ^9.29.0
 
-  '@erlinemrys/lib.common@0.0.13':
-    resolution: {integrity: sha512-mc8xfRb1xJFRDswMb2qMPAQzyC+NuTWPzhuHUwLnDs1Gp7wEFosW2z2Bg6yn40tf9vfknH5+N0QZ/hef5wABAw==}
+  '@erlinemrys/lib.common@0.0.14':
+    resolution: {integrity: sha512-VSv4VdACAPkAEfBnDP6jobk7M3x1ENmORZk5jrKemLCE3g5oMc5eHYc7XDagx7cYFfhh02NS8qLn6XuFDgPwkQ==}
 
   '@es-joy/jsdoccomment@0.50.2':
     resolution: {integrity: sha512-YAdE/IJSpwbOTiaURNCKECdAwqrJuFiZhylmesBcIRawtYKnBR2wxPhoIewMg+Yu+QuYvHfJNReWpoxGBKOChA==}
@@ -2015,7 +2015,7 @@ snapshots:
       - typescript
       - vitest
 
-  '@erlinemrys/lib.common@0.0.13': {}
+  '@erlinemrys/lib.common@0.0.14': {}
 
   '@es-joy/jsdoccomment@0.50.2':
     dependencies:

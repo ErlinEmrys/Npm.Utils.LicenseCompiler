@@ -1,4 +1,4 @@
-import type { ILicenseData } from "./License";
+import type { ILicenseData } from "@erlinemrys/lib.common";
 import fs from "node:fs";
 
 export function FormatJson( outputFilePath: string, data: ILicenseData )

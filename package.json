@@ -1,7 +1,7 @@
 {
 	"name": "license-compiler",
 	"type": "module",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "Utility for managing licenses",
 	"author": "Erlin Emrys",
 	"license": "MIT",
@@ -52,7 +52,7 @@
 	"dependencies":
 	{
 		"@commander-js/extra-typings": "14.0.0",
-		"@erlinemrys/lib.common": "0.0.13",
+		"@erlinemrys/lib.common": "0.0.14",
 		"commander": "14.0.3"
 	},
 	"devDependencies":

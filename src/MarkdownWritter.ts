@@ -1,7 +1,6 @@
-import type { ILicenseData } from "./License";
+import type { ILicenseData } from "@erlinemrys/lib.common";
 import fs from "node:fs";
-import { ValidationHelper } from "@erlinemrys/lib.common";
-import { LicenseDataType } from "./License";
+import { LicenseDataType, ValidationHelper } from "@erlinemrys/lib.common";
 
 const MD_HEADER_FIRST_SEPARATOR = "=";
 const MD_HEADER_SECOND_SEPARATOR = "-";

@@ -5,9 +5,6 @@ import { Command } from "commander";
 import { version } from "./../package.json";
 import { CompileCommand } from "./CompileCommand";
 
-export { LicenseDataType } from "./License";
-export type { ILicenseData, ILicensePackage } from "./License";
-
 Log.SubscribeLog( new ConsoleLogger() );
 Log.Dbg( "Program START" );
 

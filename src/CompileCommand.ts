@@ -1,11 +1,11 @@
-import type { ILicenseData } from "./License";
+import type { ILicenseData } from "@erlinemrys/lib.common";
 import { execFile } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import { ValidationHelper } from "@erlinemrys/lib.common";
+import { LicenseDataType, ValidationHelper } from "@erlinemrys/lib.common";
 import { FormatJson } from "./JsonWritter";
-import { LicenseData, LicenseDataType, LicensePackage } from "./License";
+import { LicenseData, LicensePackage } from "./License";
 import { WriteOutputMD } from "./MarkdownWritter";
 
 export interface ICompileOptions
